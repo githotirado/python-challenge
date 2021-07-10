@@ -1,15 +1,19 @@
 # import modules
-import csv
+import csv, pathlib
 
-# initialize a dictionary to store each key-value
-budget_dict = {}
+# initialize list to store dictionary rows and moving increases/decreases
 budget_list = []
 profit_loss_total = 0
 profit_change_total = 0
+greatest_decrease = 0
+greatest_increase = 0
+profit_loss_change = 0
+prior_profit_loss = 0
 
 # read in the file
-budget_file = "./Resources/budget_data.csv"
-with open(budget_file) as csvfile:
+budget_csv = pathlib.Path("./Resources/budget_data.csv")
+
+with open(budget_csv) as csvfile:
     csvreader = csv.reader(csvfile, delimiter = ",")
     # Read in the header
     csvheader = next(csvreader)
@@ -22,11 +26,6 @@ with open(budget_file) as csvfile:
         profit_loss_date = row[0]
         profit_loss_total += profit_loss
         if index == 0:
-            prior_profit_loss = 0
-            greatest_decrease = 0
-            greatest_decrease_date = ""
-            greatest_increase = 0
-            greatest_increase_date = ""
             profit_loss_change = 0
         else:
             profit_loss_change = profit_loss - prior_profit_loss
@@ -41,28 +40,24 @@ with open(budget_file) as csvfile:
             greatest_decrease_date = profit_loss_date
 
         budget_list.append({profit_loss_date : [profit_loss, profit_loss_change]})
-        budget_dict[profit_loss_date] = profit_loss
-
-        prior_profit_loss = profit_loss
+        
+        prior_profit_loss    = profit_loss
         profit_change_total += profit_loss_change
 
-# print(budget_list)
-# print(budget_dict)
 # Count number of months in data set
-months_count = len(budget_dict)
-# months_count = len(budget_list)
+months_count = len(budget_list)
 
 # The net total of profit/losses over entire period
 ## already calculated in final profit_losses
 
-# The average of changes over entire period
+# The average of changes over entire period (exclude first row)
 avg_change = profit_change_total / (months_count - 1)
 
 # Greatest increase in profits (date and amount)
 # Greatest decrease in losses (date and amount)
 ## print(budget_dict)
-print(f"Total months: {months_count}")
-print(f"Total profit/loss: ${profit_loss_total}")
-print(f"Average change: ${avg_change}")
-print(f"Greatest increase in profits: {greatest_increase_date} ${greatest_increase}")
-print(f"Greatest decrease in profits: {greatest_decrease_date} ${greatest_decrease}")
+print(f"Total Months:                       {months_count}")
+print(f"Total Profit/Loss:                  ${profit_loss_total:.0f}")
+print(f"Average Change:                     ${avg_change:.2f}")
+print(f"Greatest Profits Increase: {greatest_increase_date} ${greatest_increase:.0f}")
+print(f"Greatest Profits Decrease: {greatest_decrease_date} ${greatest_decrease:.0f}")
