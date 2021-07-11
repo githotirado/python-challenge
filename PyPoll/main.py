@@ -39,4 +39,4 @@ for candidate in poll_dict:
         votes_to_beat = poll_dict[candidate]
 
 # The winner of the election based on popular vote.
-print(f"Winner : {winner}")
+print(f"WINNER       : {winner}")
