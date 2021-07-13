@@ -1,7 +1,7 @@
 import csv, pathlib
 
 poll_csv_input = pathlib.Path('./Resources/election_data.csv')
-poll_analysis_output = pathlib.Path('./analysis/poll_analysis.csv')
+poll_analysis_output = pathlib.Path('./analysis/poll_analysis.txt')
 # poll_list = []
 poll_dict = {}
 total_voters = 0
@@ -23,20 +23,27 @@ with open(poll_csv_input) as poll_file:
         total_voters += 1
 # print(poll_dict)
 
-# Print out the results
+# Print out the results to screen and to output file
 # The total number of votes cast
-print(f"Total voter records: {total_voters}")
-
 # A complete list of candidates who received votes
 # The percentage of votes each candidate won
 # The total number of votes each candidate won
 votes_to_beat = 0
-for candidate in poll_dict:
-    pct_votes = poll_dict[candidate] * 100 / total_voters
-    print(f"{candidate:10}:  {pct_votes:8.3f}% ({poll_dict[candidate]} votes)")
-    if poll_dict[candidate] > votes_to_beat:
-        winner        = candidate
-        votes_to_beat = poll_dict[candidate]
 
-# The winner of the election based on popular vote.
-print(f"WINNER       : {winner}")
+with open(poll_analysis_output, "w") as output_txt:
+    total_voter_records=f"\nTotal voter records: {total_voters}\n"
+    print(total_voter_records)
+    output_txt.write(total_voter_records + "\n")
+    for candidate, total_votes in poll_dict.items():
+        pct_votes = total_votes * 100 / total_voters
+        candidate_counts=f"{candidate:10}:  {pct_votes:8.3f}% ({total_votes} votes)"
+        print(candidate_counts)
+        output_txt.write(candidate_counts + "\n")
+        if total_votes > votes_to_beat:
+            winner        = candidate
+            votes_to_beat = total_votes
+
+    # The winner of the election based on popular vote.
+    winner=f"\nWINNER    : {winner}"
+    print(winner)
+    output_txt.write(winner)

@@ -14,7 +14,7 @@ prior_profit_loss   = 0
 
 # Define input and output files
 budget_csv      = pathlib.Path("./Resources/budget_data.csv")
-budget_analysis = pathlib.Path("./analysis/budget_analysis.csv")
+budget_out_txt = pathlib.Path("./analysis/budget_analysis.txt")
 
 with open(budget_csv) as csvfile:
     csvreader = csv.reader(csvfile, delimiter = ",")
@@ -54,23 +54,23 @@ with open(budget_csv) as csvfile:
 # Count number of months in data set
 months_count = len(budget_list)
 
-# for irow in budget_list:
-#     print(f"{irow}")
-
 # The net total of profit/losses over entire period
 ## already calculated in profit_loss_total
 
 # The average of changes over entire period (exclude first row)
 avg_change = profit_change_total / (months_count - 1)
 
-# Print out findings to screen
-print("---------------------------------------------------------")
-print(f"Financial Analysis for file {budget_csv}")
-print("---------------------------------------------------------")
-print(f"Total Months:                       {months_count}")
-print(f"Total Profit/Loss:                  ${profit_loss_total:.0f}")
-print(f"Average Change:                     ${avg_change:.2f}")
-print(f"Greatest Profits Increase: {greatest_increase_date} ${greatest_increase:.0f}")
-print(f"Greatest Profits Decrease: {greatest_decrease_date} ${greatest_decrease:.0f}\n")
-
-# Print findings to analysis folder
+# Print out findings to screen and to text file
+outtext=f"""
+---------------------------------------------------------
+Financial Analysis for file {budget_csv}
+---------------------------------------------------------
+Total Months:                       {months_count}
+Total Profit/Loss:                  ${profit_loss_total:.0f}
+Average Change:                     ${avg_change:.2f}
+Greatest Profits Increase: {greatest_increase_date} ${greatest_increase:.0f}
+Greatest Profits Decrease: {greatest_decrease_date} ${greatest_decrease:.0f}\n
+"""
+print(outtext)
+with open(budget_out_txt, "w") as budget_output:
+    budget_output.write(outtext)
