@@ -2,7 +2,6 @@ import csv, pathlib
 
 poll_csv_input = pathlib.Path('./Resources/election_data.csv')
 poll_analysis_output = pathlib.Path('./analysis/poll_analysis.txt')
-# poll_list = []
 poll_dict = {}
 total_voters = 0
 
@@ -10,11 +9,9 @@ with open(poll_csv_input) as poll_file:
     pollreader = csv.reader(poll_file, delimiter = ",")
     pollheader = next(pollreader)
 
+    # Read all rows, count candidate votes
     for row in pollreader:
-        # voter_id = row[0]
-        # voter_county = row[1]
         voter_candidate = row[2]
-        # poll_list.append({voter_id : [voter_county, voter_candidate]})
         # Tally votes with polling dictionary
         if voter_candidate in poll_dict:
             poll_dict[voter_candidate] = poll_dict[voter_candidate] + 1
